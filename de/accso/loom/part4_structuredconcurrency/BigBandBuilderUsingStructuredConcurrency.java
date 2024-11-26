@@ -50,6 +50,7 @@ public class BigBandBuilderUsingStructuredConcurrency {
             List<Musician>     musicians =   musiciansTask.get();
             List<Instrument> instruments = instrumentsTask.get();
             return new BigBand(instruments, musicians);
+
         }
         catch (InterruptedException | ExecutionException | TimeoutException ex) {
             throw new RuntimeException(ex);
