@@ -15,20 +15,14 @@ public class ThreadLocalExample {
     private static final ExecutorService executor = Executors.newFixedThreadPool(2);
 
     public static void main(String[] args) {
-        Framework framework = setupFramework();
+        Framework framework = new Framework(new MyApp(), executor);
 
         sendRequest(framework);
         executor.shutdown();
     }
 
-    private static Framework setupFramework() {
-        Application application = new MyApp();
-        Framework framework = new Framework(application, executor);
-        return framework;
-    }
-
     private static void sendRequest(Framework framework) {
-        // these scoped values could come from a config setting or from a user login, respectively
+        // these values could come from a config setting or from a user login, respectively
         RegionCode regionCode = NA;
         User user = new User("jane123", true);
 

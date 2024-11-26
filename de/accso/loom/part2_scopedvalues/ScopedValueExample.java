@@ -10,19 +10,13 @@ import static de.accso.loom.part2_scopedvalues.context.RegionCode.EU;
 
 public class ScopedValueExample {
     public static void main(String[] args) {
-        Framework framework = setupFramework();
+        Framework framework = new Framework( new MyApp() );
 
         sendRequest(framework);
     }
 
-    private static Framework setupFramework() {
-        Application application = new MyApp();
-        Framework framework = new Framework(application);
-        return framework;
-    }
-
     private static void sendRequest(Framework framework) {
-        // these scoped values could come from a config setting or from a user login, respectively
+        // these values could come from a config setting or from a user login, respectively
         RegionCode regionCode = EU;
         User user = new User("john123", true);
 
