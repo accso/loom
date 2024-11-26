@@ -23,12 +23,10 @@ public class BigBandBuilderUsingStructuredConcurrency {
     }
 
     public BigBand getAllInstrumentsAndMusicians() {
-        BigBand result = null;
-
         int maxTimeOutInMs = 20_000; // 1s max for each musician => 17s max
 
         // or StructuredTaskScope.ShutdownOnFailure() or StructuredTaskScope.ShutdownOnSuccess()
-        try (var scope = new StructuredTaskScope<>("bigBandScope", threadFactory)) {
+        try (var scope = new StructuredTaskScope<>.ShutdownOnFailure("bigBandScope", threadFactory)) {
 
             // (1) create tasks and fork them
             logWithTime("Now forking to wake up all musicians");
@@ -42,16 +40,18 @@ public class BigBandBuilderUsingStructuredConcurrency {
             scope.joinUntil( Instant.now().plusMillis(maxTimeOutInMs) );
             logWithTime("Both tasks joined, all done");
 
-            // (3) get all results and bring instruments and musicians together 🎵
-            if (musiciansTask.state() != FAILED && instrumentsTask.state() != FAILED) {
-                List<Musician>     musicians =   musiciansTask.get();
-                List<Instrument> instruments = instrumentsTask.get();
-                result = new BigBand(instruments, musicians);
-            }
+            // (3) error handling
+            scope.throwIfFailed();
+//            if (musiciansTask.state() == FAILED || instrumentsTask.state() == FAILED) {
+//                return null;
+//            }
 
-            return result;
+            // (4) get all results and bring instruments and musicians together 🎵
+            List<Musician>     musicians =   musiciansTask.get();
+            List<Instrument> instruments = instrumentsTask.get();
+            return new BigBand(instruments, musicians);
         }
-        catch (InterruptedException | TimeoutException ex) {
+        catch (InterruptedException | ExecutionException | TimeoutException ex) {
             throw new RuntimeException(ex);
         }
     }
