@@ -12,13 +12,14 @@ import java.util.concurrent.Executors;
 import static de.accso.loom.part1_threadlocal.context.RegionCode.NA;
 
 public class ThreadLocalExample {
-    private static final ExecutorService executor = Executors.newFixedThreadPool(2);
 
     public static void main(String[] args) {
-        Framework framework = new Framework(new MyApp(), executor);
+        try (var executor = Executors.newFixedThreadPool(2)) {
+            Framework framework = new Framework(new MyApp(), executor);
 
-        sendRequest(framework);
-        executor.shutdown();
+            sendRequest(framework);
+            executor.shutdown();
+        }
     }
 
     private static void sendRequest(Framework framework) {

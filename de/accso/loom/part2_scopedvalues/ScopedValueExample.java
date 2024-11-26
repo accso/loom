@@ -2,17 +2,23 @@ package de.accso.loom.part2_scopedvalues;
 
 import de.accso.loom.part2_scopedvalues.context.RegionCode;
 import de.accso.loom.part2_scopedvalues.context.User;
-import de.accso.loom.part2_scopedvalues.framework.Application;
 import de.accso.loom.part2_scopedvalues.framework.Framework;
 import de.accso.loom.part2_scopedvalues.framework.Request;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static de.accso.loom.part2_scopedvalues.context.RegionCode.EU;
 
 public class ScopedValueExample {
-    public static void main(String[] args) {
-        Framework framework = new Framework( new MyApp() );
 
-        sendRequest(framework);
+    public static void main(String[] args) {
+        try (var executor = Executors.newFixedThreadPool(2)) {
+            Framework framework = new Framework(new MyApp(), executor);
+
+            sendRequest(framework);
+            executor.shutdown();
+        }
     }
 
     private static void sendRequest(Framework framework) {

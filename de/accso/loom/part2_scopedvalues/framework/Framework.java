@@ -8,13 +8,12 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class Framework implements Callback {
+    private final ExecutorService executor;
+    private final Application app;
 
-    private Application app;
-
-    private final ExecutorService executor = Executors.newFixedThreadPool(2);
-
-    public Framework(Application app) {
+    public Framework(Application app, ExecutorService executor) {
         this.app = app;
+        this.executor = executor;
     }
 
     private static final ScopedValue<UUID>       correlationIdCtx = ScopedValue.newInstance();
@@ -30,7 +29,7 @@ public class Framework implements Callback {
                        .where(userCtx,          user)
                     // run
                     .run(() -> {
-                        app.handle((Callback) this, request); //TODO how to execute this on a new Thread?
+                        app.handle((Callback) this, request);
                     });
 
             // no need to remove context explicitely, context is no longer bound!

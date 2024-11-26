@@ -2,18 +2,22 @@ package de.accso.loom.part3_future;
 
 import de.accso.loom.part3_future.music.BigBand;
 
+import java.util.concurrent.Executors;
+
 import static de.accso.loom.util.LogHelper.logError;
 
 public class FutureExample {
 
     public static void main(String[] args) {
-        BigBand bigBand = new BigBandBuilderUsingFutures().getAllInstrumentsAndMusicians();
+        try (var executor = Executors.newFixedThreadPool(2)) {
 
-        if (bigBand == null) {
-            logError("Too bad ... No BigBand could be built.");
-        }
-        else {
-            bigBand.startToPlay();
+            BigBand bigBand = new BigBandBuilderUsingFutures(executor).getAllInstrumentsAndMusicians();
+
+            if (bigBand == null) {
+                logError("Too bad ... No BigBand could be built.");
+            } else {
+                bigBand.startToPlay();
+            }
         }
     }
 

@@ -16,12 +16,18 @@ import static de.accso.loom.util.PauseHelper.randomPause;
 
 public class BigBandBuilderUsingFutures {
 
+    private final ExecutorService executor;
+
+    public BigBandBuilderUsingFutures(ExecutorService executor) {
+        this.executor = executor;
+    }
+
     public BigBand getAllInstrumentsAndMusicians() {
         BigBand result = null;
 
         int maxTimeOutInMs = 20_000; // 1s max for each musician => 17s max
 
-        try (var executor = Executors.newFixedThreadPool(2)) {
+        try {
 
             // (1) create tasks and fork them
             logWithTime("Now forking to wake up all musicians");
