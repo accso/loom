@@ -70,10 +70,12 @@ public class BigBandBuilderUsingStructuredConcurrency {
         logWithTime("Task: Waking up all musicians ... starting");
 
         // now let's enforce an error here at musician number 3
-        AtomicInteger countDownToError = new AtomicInteger(3);
+// //commented out: Throw an error (which not only stops this task but _all_ of the tasks)
+//        AtomicInteger countDownToError = new AtomicInteger(3);
 
         List<Musician> musicians = Arrays.stream(Musician.values())
                 .peek(_ -> randomPause(100, 1_000)) //  it takes a while to wake up each musician
+// //commented out: Throw an error (which not only stops this task but _all_ of the tasks)
 //                .peek(_ -> {
 //                    countDownToError.decrementAndGet();
 //                    if (countDownToError.get() == 0) {
