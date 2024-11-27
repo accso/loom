@@ -28,14 +28,14 @@ public class Framework implements Callback {
             // set context, per thread
             correlationIdTL.set( (correlationId != null) ? correlationId : UUID.randomUUID() );
                regionCodeTL.set( (regionCode    != null) ? regionCode    : RegionCode.UNKNOWN );
-            userTL.set(user);
+                     userTL.set( user );
 
             app.handle((Callback) this, request);
 
             // need to remove the context explicitely
             correlationIdTL.remove();
-            regionCodeTL.remove();
-            userTL.remove();
+               regionCodeTL.remove();
+                     userTL.remove();
         };
 
         executor.submit(task);

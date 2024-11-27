@@ -42,7 +42,6 @@ public class Framework implements Callback {
         };
 
         executor.submit(task);
-        executor.shutdown();
     }
 
     @Override
