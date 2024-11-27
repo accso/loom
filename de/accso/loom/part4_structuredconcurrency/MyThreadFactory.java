@@ -7,8 +7,13 @@ public final class MyThreadFactory implements ThreadFactory {
 
     @Override
     public Thread newThread(Runnable runnable) {
-        Thread thread = Executors.defaultThreadFactory().newThread(runnable);
-        thread.setName("task_" + thread.threadId());
+        // normal or virtual thread?
+        // Thread thread = Executors.defaultThreadFactory().newThread(runnable);
+        Thread thread = Thread.ofVirtual().factory().newThread(runnable);
+
+        String name = String.format("%s-%s-%d",
+                thread.isVirtual() ? "VT" : "T", thread.getName(), thread.threadId());
+        thread.setName(name);
         return thread;
     }
 }

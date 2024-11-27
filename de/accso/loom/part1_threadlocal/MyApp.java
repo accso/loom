@@ -21,7 +21,7 @@ public class MyApp implements Application {
         }
         else {
             // get context information
-            UUID correlationId = callback.getCorrelationId();
+            UUID correlationId = callback.getCorrelationId().id();
             RegionCode region  = callback.getRegion();
 
             // log request

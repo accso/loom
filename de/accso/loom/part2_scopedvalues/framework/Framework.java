@@ -1,5 +1,6 @@
 package de.accso.loom.part2_scopedvalues.framework;
 
+import de.accso.loom.part2_scopedvalues.context.CorrelationId;
 import de.accso.loom.part2_scopedvalues.context.RegionCode;
 import de.accso.loom.part2_scopedvalues.context.User;
 
@@ -17,17 +18,17 @@ public class Framework implements Callback {
         this.executor = executor;
     }
 
-    private static final ScopedValue<UUID>       correlationIdCtx = ScopedValue.newInstance();
-    private static final ScopedValue<RegionCode>    regionCodeCtx = ScopedValue.newInstance();
-    private static final ScopedValue<User>                userCtx = ScopedValue.newInstance();
+    private static final ScopedValue<CorrelationId>       correlationIdCtx = ScopedValue.newInstance();
+    private static final ScopedValue<RegionCode>             regionCodeCtx = ScopedValue.newInstance();
+    private static final ScopedValue<User>                         userCtx = ScopedValue.newInstance();
 
-    public void serveRequest(UUID correlationId, RegionCode regionCode, User user, Request request) {
+    public void serveRequest(CorrelationId correlationId, RegionCode regionCode, User user, Request request) {
         Objects.requireNonNull(user);
 
         Runnable task = () -> {
             ScopedValue
                     // set context
-                       .where(correlationIdCtx, (correlationId != null) ? correlationId : UUID.randomUUID())
+                       .where(correlationIdCtx, (correlationId != null) ? correlationId : new CorrelationId(UUID.randomUUID()) )
                        .where(regionCodeCtx,    (regionCode    != null) ? regionCode    : RegionCode.UNKNOWN)
                        .where(userCtx,          user)
                     // run
@@ -50,7 +51,7 @@ public class Framework implements Callback {
     }
 
     @Override
-    public UUID getCorrelationId() {
+    public CorrelationId getCorrelationId() {
         return correlationIdCtx.get();
     }
 

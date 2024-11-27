@@ -53,20 +53,20 @@ public class BigBandBuilderUsingFutures {
     }
 
     private List<Instrument> searchInstruments() {
-        logWithTime("Task: Searching all instruments ... starting");
+        logWithTime("TaskSearchInstruments - Searching all instruments ... starting");
 
         List<Instrument> instruments = Arrays.stream(Instrument.values())
                 .peek(_ -> randomPause(50, 500)) // it takes a while to find each instrument
-                .peek(instrument -> logError("\tInstrument " + instrument.name() + " found and ready ..."))
+                .peek(instrument -> logError("TaskSearchInstruments - Instrument " + instrument.name() + " found and ready ..."))
                 .collect(Collectors.toList());
 
-        logWithTime("Task: Searching all instruments ... done");
+        logWithTime("TaskSearchInstruments - Searching all instruments ... done");
 
         return instruments;
     }
 
     private List<Musician> wakeUpMusicians() {
-        logWithTime("Task: Waking up all musicians ... starting");
+        logWithTime("TaskWakeUpMusicians - Waking up all musicians ... starting");
 
         // now let's enforce an error here at musician number 3
         AtomicInteger countDownToError = new AtomicInteger(3);
@@ -81,10 +81,10 @@ public class BigBandBuilderUsingFutures {
 //                        throw new RuntimeException(errorText);
 //                    }
 //                })
-                .peek(musician -> logError("\tMusician   " + musician.name() + " woke up ..."))
+                .peek(musician -> logError("TaskWakeUpMusicians - Musician   " + musician.name() + " woke up ..."))
                 .collect(Collectors.toList());
 
-        logWithTime("Task: Waking up all musicians ... done");
+        logWithTime("TaskWakeUpMusicians - Waking up all musicians ... done");
 
         return musicians;
     }

@@ -2,11 +2,11 @@ package de.accso.loom.part1_threadlocal.framework;
 
 import de.accso.loom.part1_threadlocal.context.RegionCode;
 import de.accso.loom.part1_threadlocal.context.User;
+import de.accso.loom.part1_threadlocal.context.CorrelationId;
 
 import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class Framework implements Callback {
     private final ExecutorService executor;
@@ -17,16 +17,16 @@ public class Framework implements Callback {
         this.executor = executor;
     }
 
-    private static final ThreadLocal<UUID>       correlationIdTL = new ThreadLocal<>();
-    private static final ThreadLocal<RegionCode>    regionCodeTL = new ThreadLocal<>();
-    private static final ThreadLocal<User>                userTL = new ThreadLocal<>();
+    private static final ThreadLocal<CorrelationId>       correlationIdTL = new ThreadLocal<>();
+    private static final ThreadLocal<RegionCode>             regionCodeTL = new ThreadLocal<>();
+    private static final ThreadLocal<User>                         userTL = new ThreadLocal<>();
 
-    public void serveRequest(UUID correlationId, RegionCode regionCode, User user, Request request) {
+    public void serveRequest(CorrelationId correlationId, RegionCode regionCode, User user, Request request) {
         Objects.requireNonNull(user);
 
         Runnable task = () -> {
             // set context, per thread
-            correlationIdTL.set( (correlationId != null) ? correlationId : UUID.randomUUID() );
+            correlationIdTL.set( (correlationId != null) ? correlationId : new CorrelationId(UUID.randomUUID()) );
                regionCodeTL.set( (regionCode    != null) ? regionCode    : RegionCode.UNKNOWN );
                      userTL.set( user );
 
@@ -47,7 +47,7 @@ public class Framework implements Callback {
     }
 
     @Override
-    public UUID getCorrelationId() {
+    public CorrelationId getCorrelationId() {
         return correlationIdTL.get();
     }
 

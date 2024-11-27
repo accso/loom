@@ -27,7 +27,7 @@ public class BigBandBuilderUsingStructuredConcurrency {
         int maxTimeOutInMs = 20_000; // 1s max for each musician => 17s max
 
         // or StructuredTaskScope<>() or StructuredTaskScope.ShutdownOnSuccess()
-        try (var scope = new StructuredTaskScope.ShutdownOnFailure("bigBandScope", threadFactory)) {
+        try (var scope = new StructuredTaskScope.ShutdownOnFailure("scope_big-band", threadFactory)) {
 
             // (1) create tasks and fork them
             logWithTime("Now forking to wake up all musicians");
