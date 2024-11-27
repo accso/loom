@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
+import static de.accso.loom.util.LogHelper.logError;
 import static de.accso.loom.util.LogHelper.logWithTime;
 import static de.accso.loom.util.PauseHelper.randomPause;
 import static java.util.concurrent.StructuredTaskScope.Subtask.State.FAILED;
@@ -25,7 +26,7 @@ public class BigBandBuilderUsingStructuredConcurrency {
     public BigBand getAllInstrumentsAndMusicians() {
         int maxTimeOutInMs = 20_000; // 1s max for each musician => 17s max
 
-        // or StructuredTaskScope.ShutdownOnFailure() or StructuredTaskScope.ShutdownOnSuccess()
+        // or StructuredTaskScope<>() or StructuredTaskScope.ShutdownOnSuccess()
         try (var scope = new StructuredTaskScope.ShutdownOnFailure("bigBandScope", threadFactory)) {
 
             // (1) create tasks and fork them
@@ -41,10 +42,9 @@ public class BigBandBuilderUsingStructuredConcurrency {
             logWithTime("Both tasks joined, all done");
 
             // (3) error handling
+//            if (musiciansTask.state() == FAILED) logError(  musiciansTask.exception());
+//            if (musiciansTask.state() == FAILED) logError(instrumentsTask.exception());
             scope.throwIfFailed();
-//            if (musiciansTask.state() == FAILED || instrumentsTask.state() == FAILED) {
-//                return null;
-//            }
 
             // (4) get all results and bring instruments and musicians together 🎵
             List<Musician>     musicians =   musiciansTask.get();

@@ -23,5 +23,11 @@ public final class LogHelper {
                 text);
     }
 
+    public static void logError(Throwable exception) {
+        System.err.printf("[%s] %s%n",
+                Thread.currentThread().getName(),
+                exception.getMessage());
+    }
+
 }
 
