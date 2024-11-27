@@ -28,6 +28,6 @@ public class ThreadLocalExample {
         User user = new User("jane123", true);
 
         Request request = new Request("Jane", "Doe", "New York");
-        framework.serveRequest(regionCode, user, request);
+        framework.serveRequest(null, regionCode, user, request);
     }
 }

@@ -15,7 +15,7 @@ public final class TaskWakeUpMusicians implements Callable<List<Musician>> {
 
     @Override
     public List<Musician> call() {
-        logWithTime("Task: Waking up all musicians ... starting");
+        logWithTime(taskName + " - Waking up all musicians ... starting");
 
         // now let's enforce an error here at musician number 3
 // //commented out: Throw an error (which not only stops this task but _all_ of the tasks)
@@ -35,7 +35,7 @@ public final class TaskWakeUpMusicians implements Callable<List<Musician>> {
                 .peek(musician -> logWithTime(taskName +" - Musician " + musician.name() + " woke up ..."))
                 .collect(Collectors.toList());
 
-        logWithTime("Task: Waking up all musicians ... done");
+        logWithTime(taskName + " - Waking up all musicians ... done");
 
         return musicians;
     }

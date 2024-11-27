@@ -3,6 +3,7 @@ package de.accso.loom.part2_scopedvalues.framework;
 import de.accso.loom.part2_scopedvalues.context.RegionCode;
 import de.accso.loom.part2_scopedvalues.context.User;
 
+import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -20,12 +21,14 @@ public class Framework implements Callback {
     private static final ScopedValue<RegionCode>    regionCodeCtx = ScopedValue.newInstance();
     private static final ScopedValue<User>                userCtx = ScopedValue.newInstance();
 
-    public void serveRequest(RegionCode regionCode, User user, Request request) {
+    public void serveRequest(UUID correlationId, RegionCode regionCode, User user, Request request) {
+        Objects.requireNonNull(user);
+
         Runnable task = () -> {
             ScopedValue
                     // set context
-                       .where(correlationIdCtx, correlationIdCtx.isBound() ? getCorrelationId() : UUID.randomUUID())
-                       .where(regionCodeCtx,    regionCode)
+                       .where(correlationIdCtx, (correlationId != null) ? correlationId : UUID.randomUUID())
+                       .where(regionCodeCtx,    (regionCode    != null) ? regionCode    : RegionCode.UNKNOWN)
                        .where(userCtx,          user)
                     // run
                     .run(() -> {
@@ -38,7 +41,6 @@ public class Framework implements Callback {
             assert( !          userCtx.isBound() );
         };
 
-        executor.submit(task);
         executor.submit(task);
         executor.shutdown();
     }

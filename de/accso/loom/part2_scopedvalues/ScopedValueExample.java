@@ -27,6 +27,6 @@ public class ScopedValueExample {
         User user = new User("john123", true);
 
         Request request = new Request("John", "Doe", "Frankfurt");
-        framework.serveRequest(regionCode, user, request);
+        framework.serveRequest(null, regionCode, user, request);
     }
 }

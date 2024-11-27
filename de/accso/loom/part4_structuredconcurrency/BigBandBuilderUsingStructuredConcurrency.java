@@ -26,7 +26,7 @@ public class BigBandBuilderUsingStructuredConcurrency {
         int maxTimeOutInMs = 20_000; // 1s max for each musician => 17s max
 
         // or StructuredTaskScope.ShutdownOnFailure() or StructuredTaskScope.ShutdownOnSuccess()
-        try (var scope = new StructuredTaskScope<>.ShutdownOnFailure("bigBandScope", threadFactory)) {
+        try (var scope = new StructuredTaskScope.ShutdownOnFailure("bigBandScope", threadFactory)) {
 
             // (1) create tasks and fork them
             logWithTime("Now forking to wake up all musicians");
@@ -37,7 +37,7 @@ public class BigBandBuilderUsingStructuredConcurrency {
 
             // (2) wait until all tasks are executed in parallel
             logWithTime("Now joining both tasks ... waiting ...");
-            scope.joinUntil( Instant.now().plusMillis(maxTimeOutInMs) );
+       //     scope.joinUntil( Instant.now().plusMillis(maxTimeOutInMs) );
             logWithTime("Both tasks joined, all done");
 
             // (3) error handling
@@ -52,7 +52,7 @@ public class BigBandBuilderUsingStructuredConcurrency {
             return new BigBand(instruments, musicians);
 
         }
-        catch (InterruptedException | ExecutionException | TimeoutException ex) {
+        catch (/* InterruptedException | */ ExecutionException /*| TimeoutException */ex) {
             throw new RuntimeException(ex);
         }
     }

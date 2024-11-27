@@ -16,14 +16,14 @@ public final class TaskSearchInstruments implements Callable<List<Instrument>> {
 
     @Override
     public List<Instrument> call() {
-        logWithTime("Task: Searching all instruments ... starting");
+        logWithTime(taskName + " - Searching all instruments ... starting");
 
         List<Instrument> instruments = Arrays.stream(Instrument.values())
                 .peek(_ -> randomPause(50, 500)) // it takes a while to find each instrument
                 .peek(instrument -> logWithTime(taskName + " - Instrument " + instrument.name() + " found and ready ..."))
                 .collect(Collectors.toList());
 
-        logWithTime("Task: Searching all instruments ... done");
+        logWithTime(taskName + " - Searching all instruments ... done");
 
         return instruments;
     }
