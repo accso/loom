@@ -5,8 +5,10 @@ import de.accso.loom.part4_structuredconcurrency.music.Musician;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
+import static de.accso.loom.util.LogHelper.logError;
 import static de.accso.loom.util.LogHelper.logWithTime;
 import static de.accso.loom.util.PauseHelper.randomPause;
 

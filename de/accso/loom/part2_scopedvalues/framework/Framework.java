@@ -34,7 +34,7 @@ public class Framework {
                         app.handle(request);
                     });
 
-            // no need to remove context explicitely, context is no longer bound!
+            // no need to remove context explicitly, context is no longer bound!
             assert( ! correlationIdCtx.isBound() );
             assert( !    regionCodeCtx.isBound() );
             assert( !          userCtx.isBound() );

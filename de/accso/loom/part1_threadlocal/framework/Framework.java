@@ -26,13 +26,16 @@ public class Framework implements Callback {
 
         Runnable task = () -> {
             // set context, per thread
-            correlationIdTL.set( (correlationId != null) ? correlationId : new CorrelationId(UUID.randomUUID()) );
-               regionCodeTL.set( (regionCode    != null) ? regionCode    : RegionCode.UNKNOWN );
-                     userTL.set( user );
+            if (correlationIdTL.get() == null)
+                correlationIdTL.set( (correlationId != null) ? correlationId : new CorrelationId(UUID.randomUUID()) );
+            if (regionCodeTL.get() == null)
+                regionCodeTL.set( (regionCode    != null) ? regionCode    : RegionCode.UNKNOWN );
+            if (userTL.get() == null)
+                userTL.set( user );
 
             app.handle((Callback) this, request);
 
-            // need to remove the context explicitely
+            // need to remove the context explicitly
             correlationIdTL.remove();
                regionCodeTL.remove();
                      userTL.remove();
