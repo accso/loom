@@ -1,6 +1,5 @@
 package de.accso.loom.part4_structuredconcurrency;
 
-import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 
 public final class MyThreadFactory implements ThreadFactory {

@@ -9,7 +9,7 @@ import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class Framework implements Callback {
+public class Framework {
     private final ExecutorService executor;
     private final Application app;
 
@@ -18,22 +18,20 @@ public class Framework implements Callback {
         this.executor = executor;
     }
 
-    private static final ScopedValue<CorrelationId>       correlationIdCtx = ScopedValue.newInstance();
-    private static final ScopedValue<RegionCode>             regionCodeCtx = ScopedValue.newInstance();
-    private static final ScopedValue<User>                         userCtx = ScopedValue.newInstance();
+    public static final ScopedValue<CorrelationId>       correlationIdCtx = ScopedValue.newInstance();
+    public static final ScopedValue<RegionCode>             regionCodeCtx = ScopedValue.newInstance();
+    public static final ScopedValue<User>                         userCtx = ScopedValue.newInstance();
 
     public void serveRequest(CorrelationId correlationId, RegionCode regionCode, User user, Request request) {
         Objects.requireNonNull(user);
 
         Runnable task = () -> {
             ScopedValue
-                    // set context
-                       .where(correlationIdCtx, (correlationId != null) ? correlationId : new CorrelationId(UUID.randomUUID()) )
-                       .where(regionCodeCtx,    (regionCode    != null) ? regionCode    : RegionCode.UNKNOWN)
-                       .where(userCtx,          user)
-                    // run
+                   .where(correlationIdCtx, (correlationId != null) ? correlationId : new CorrelationId(UUID.randomUUID()) )
+                   .where(regionCodeCtx,    (regionCode    != null) ? regionCode    : RegionCode.UNKNOWN)
+                   .where(userCtx,          user)
                     .run(() -> {
-                        app.handle((Callback) this, request);
+                        app.handle(request);
                     });
 
             // no need to remove context explicitely, context is no longer bound!
@@ -43,21 +41,6 @@ public class Framework implements Callback {
         };
 
         executor.submit(task);
-    }
-
-    @Override
-    public RegionCode getRegion() {
-        return regionCodeCtx.get();
-    }
-
-    @Override
-    public CorrelationId getCorrelationId() {
-        return correlationIdCtx.get();
-    }
-
-    @Override
-    public User getUser() {
-        return userCtx.get();
     }
 }
 

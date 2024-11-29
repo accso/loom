@@ -32,8 +32,8 @@ public class MyApp implements Application {
 
             log(textToLog);
 
-            // Could change the mutable thread-local value here with set():
-            // Framework.correlationIdTL.set(UUID.fromString("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeee"));
+            // Could change theoretically the mutable thread-local value here:
+            // Framework.regionCodeTL.set(RegionCode.OC);
 
             // ... more business code goes here
         }

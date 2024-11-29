@@ -39,8 +39,8 @@ public class BigBandBuilderUsingFutures {
             // (2) wait until all tasks are executed in parallel
             //     get all results and bring instruments and musicians together 🎵
             logWithTime("Now joining both tasks ... waiting ...");
-            List<Musician>     musicians =   musiciansTask.get(maxTimeOutInMs, TimeUnit.MILLISECONDS);
-            List<Instrument> instruments = instrumentsTask.get(maxTimeOutInMs, TimeUnit.MILLISECONDS);
+            List<Musician>     musicians =   musiciansTask.get(maxTimeOutInMs, TimeUnit.MILLISECONDS); // .resultNow() ?!
+            List<Instrument> instruments = instrumentsTask.get(maxTimeOutInMs, TimeUnit.MILLISECONDS); // .resultNow() ?!
             logWithTime("Both tasks joined, all done");
             result = new BigBand(instruments, musicians);
 
@@ -73,6 +73,7 @@ public class BigBandBuilderUsingFutures {
 
         List<Musician> musicians = Arrays.stream(Musician.values())
                 .peek(_ -> randomPause(100, 1_000)) //  it takes a while to wake up each musician
+// !!! introduce error
 //                .peek(_ -> {
 //                    countDownToError.decrementAndGet();
 //                    if (countDownToError.get() == 0) {

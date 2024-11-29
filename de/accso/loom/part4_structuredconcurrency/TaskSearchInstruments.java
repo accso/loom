@@ -1,7 +1,6 @@
 package de.accso.loom.part4_structuredconcurrency;
 
 import de.accso.loom.part4_structuredconcurrency.music.Instrument;
-import de.accso.loom.part4_structuredconcurrency.music.Musician;
 
 import java.util.Arrays;
 import java.util.List;
@@ -15,8 +14,14 @@ public final class TaskSearchInstruments implements Callable<List<Instrument>> {
     private final String taskName = TaskSearchInstruments.class.getSimpleName();
 
     @Override
-    public List<Instrument> call() {
+    public List<Instrument> call() // !!! B throws InstrumentNotFoundException
+    {
         logWithTime(taskName + " - Searching all instruments ... starting");
+
+// !!! B handling of checked exception
+//        if (new Random().nextBoolean() == true) {
+//            throw new InstrumentNotFoundException();
+//        }
 
         List<Instrument> instruments = Arrays.stream(Instrument.values())
                 .peek(_ -> randomPause(50, 500)) // it takes a while to find each instrument
@@ -27,4 +32,6 @@ public final class TaskSearchInstruments implements Callable<List<Instrument>> {
 
         return instruments;
     }
+
+    public static class InstrumentNotFoundException extends Exception {}
 }

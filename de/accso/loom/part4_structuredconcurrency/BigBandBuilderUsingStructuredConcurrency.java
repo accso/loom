@@ -5,15 +5,11 @@ import de.accso.loom.part4_structuredconcurrency.music.Instrument;
 import de.accso.loom.part4_structuredconcurrency.music.Musician;
 
 import java.time.Instant;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.*;
-import java.util.stream.Collectors;
 
 import static de.accso.loom.util.LogHelper.logError;
 import static de.accso.loom.util.LogHelper.logWithTime;
-import static de.accso.loom.util.PauseHelper.randomPause;
-import static java.util.concurrent.StructuredTaskScope.Subtask.State.FAILED;
 
 public class BigBandBuilderUsingStructuredConcurrency {
 
@@ -31,10 +27,10 @@ public class BigBandBuilderUsingStructuredConcurrency {
 
             // (1) create tasks and fork them
             logWithTime("Now forking to wake up all musicians");
-            StructuredTaskScope.Subtask<List<Musician>>     musiciansTask = scope.fork( new TaskWakeUpMusicians() );
+            StructuredTaskScope.Subtask<List<Musician>>     musiciansTask = scope.fork(new TaskWakeUpMusicians());
 
             logWithTime("Now forking to search all instruments");
-            StructuredTaskScope.Subtask<List<Instrument>> instrumentsTask = scope.fork( new TaskSearchInstruments() );
+            StructuredTaskScope.Subtask<List<Instrument>> instrumentsTask = scope.fork(new TaskSearchInstruments());
 
             // (2) wait until all tasks are executed in parallel
             logWithTime("Now joining both tasks ... waiting ...");
@@ -47,13 +43,13 @@ public class BigBandBuilderUsingStructuredConcurrency {
             scope.throwIfFailed();
 
             // (4) get all results and bring instruments and musicians together 🎵
-            List<Musician>     musicians =   musiciansTask.get();
+            List<Musician>     musicians = musiciansTask.get();
             List<Instrument> instruments = instrumentsTask.get();
             return new BigBand(instruments, musicians);
 
         }
         catch (InterruptedException | ExecutionException | TimeoutException ex) {
-            throw new RuntimeException(ex);
+            throw new RuntimeException(ex);  // !!! B throw ex.getCause();
         }
     }
 }
