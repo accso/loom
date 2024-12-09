@@ -38,18 +38,19 @@ public class BigBandBuilderUsingStructuredConcurrency {
             logWithTime("Both tasks joined, all done");
 
             // (3) error handling
-//            if (musiciansTask.state() == FAILED) logError(  musiciansTask.exception());
-//            if (musiciansTask.state() == FAILED) logError(instrumentsTask.exception());
+            // if (musiciansTask.state() == FAILED) logError(  musiciansTask.exception());
+            // if (musiciansTask.state() == FAILED) logError(instrumentsTask.exception());
+
             scope.throwIfFailed();
 
             // (4) get all results and bring instruments and musicians together 🎵
-            List<Musician>     musicians = musiciansTask.get();
+            List<Musician>     musicians =   musiciansTask.get();
             List<Instrument> instruments = instrumentsTask.get();
             return new BigBand(instruments, musicians);
 
         }
         catch (InterruptedException | ExecutionException | TimeoutException ex) {
-            throw new RuntimeException(ex);  // !!! B throw ex.getCause();
+            throw new RuntimeException(ex);  // !!! [B] throw ex.getCause();
         }
     }
 }

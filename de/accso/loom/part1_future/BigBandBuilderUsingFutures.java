@@ -52,19 +52,6 @@ public class BigBandBuilderUsingFutures {
         }
     }
 
-    private List<Instrument> searchInstruments() {
-        logWithTime("TaskSearchInstruments - Searching all instruments ... starting");
-
-        List<Instrument> instruments = Arrays.stream(Instrument.values())
-                .peek(_ -> randomPause(50, 500)) // it takes a while to find each instrument
-                .peek(instrument -> logError("TaskSearchInstruments - Instrument " + instrument.name() + " found and ready ..."))
-                .collect(Collectors.toList());
-
-        logWithTime("TaskSearchInstruments - Searching all instruments ... done");
-
-        return instruments;
-    }
-
     private List<Musician> wakeUpMusicians() {
         logWithTime("TaskWakeUpMusicians - Waking up all musicians ... starting");
 
@@ -88,5 +75,18 @@ public class BigBandBuilderUsingFutures {
         logWithTime("TaskWakeUpMusicians - Waking up all musicians ... done");
 
         return musicians;
+    }
+
+    private List<Instrument> searchInstruments() {
+        logWithTime("TaskSearchInstruments - Searching all instruments ... starting");
+
+        List<Instrument> instruments = Arrays.stream(Instrument.values())
+                .peek(_ -> randomPause(50, 500)) // it takes a while to find each instrument
+                .peek(instrument -> logError("TaskSearchInstruments - Instrument " + instrument.name() + " found and ready ..."))
+                .collect(Collectors.toList());
+
+        logWithTime("TaskSearchInstruments - Searching all instruments ... done");
+
+        return instruments;
     }
 }
